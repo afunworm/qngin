@@ -11,13 +11,7 @@ export default async function (filePath) {
 	const ntfyConfig = config.plugins.ntfy;
 
 	// Get required config
-	let { host, defaultTopic, defaultPriority, accessToken } = ntfyConfig;
-
-	if (!host) throw new Error("ntfy plugin requires host in config.json.");
-	if (!accessToken) throw new Error("ntfy plugin requires accessToken in config.json.");
-
-	// Trim trailing slashes
-	host = host.replace(/\/+$/, "");
+	let { host: defaultHost, defaultTopic, defaultPriority, accessToken: defaultToken } = ntfyConfig;
 
 	try {
 		/**
@@ -25,7 +19,13 @@ export default async function (filePath) {
 		 */
 		const fileContent = await readFile(filePath);
 
-		let [{ topic, title, priority }, body] = extractDataFromContent(fileContent);
+		let [{ topic, title, priority, token, host }, body] = extractDataFromContent(fileContent);
+
+        // Token & host override
+        if (!host && !defaultHost) throw new Error("ntfy plugin requires `host` in `config.json` or in the watch file.");
+        if (!token && !defaultToken) throw new Error("ntfy plugin requires `accessToken` in config.json or `token` in the watch file.");
+        let accessToken = token ? token : defaultToken;
+        host = host ? host.replace(/\/+$/, "") : defaultHost.replace(/\/+$/, ""); // Trim trailing slashes
 
 		// Subject
 		title = title ? title : "";
