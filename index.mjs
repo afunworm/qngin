@@ -24,13 +24,17 @@ async function importPlugins(dir) {
 
 	for (const folder of folders) {
 		if (folder.isDirectory()) {
+            /**
+             * Excluding disabled plugins
+             */
+            if (config.plugins[folder.name] && config.plugins[folder.name].disabled) continue;
+
 			const subDir = path.join(dir, folder.name);
 			const indexFilePath = path.join(subDir, "index.mjs");
 
 			if (fs.existsSync(indexFilePath)) {
 				const moduleUrl = pathToFileURL(indexFilePath);
 				const module = await import(moduleUrl.href);
-				// processors[folder.name] = module.default || module;
 				plugins[folder.name.toLowerCase()] = module.default || module;
 				console.log(`Imported plugin plugins ${folder.name}`);
 			}
