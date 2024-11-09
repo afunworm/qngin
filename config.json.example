@@ -1,0 +1,26 @@
+{
+	"plugins": {
+		"mail": {
+			"host": "smtp.example.com",
+			"port": 587,
+			"secure": false,
+			"user": "afunworm@example.com",
+			"from": "no-reply@mail.example.com",
+			"password": "password",
+			"html": true,
+			"allowFromOverride": true,
+			"comment": "Leave secure to false if using port 587 or 25. If using 465 and needing TSL, set secure to true."
+		},
+		"ntfy": {
+			"host": "https://ntfy.sh",
+			"accessToken": "",
+			"defaultTopic": "_dev",
+			"defaultPriority": 3,
+			"markdown": true
+		}
+	},
+	"watch": ["./queues"],
+	"completeDir": "completed",
+	"failedDir": "failed",
+	"logDir": "./logs"
+}
