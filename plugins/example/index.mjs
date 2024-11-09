@@ -11,6 +11,11 @@ export default async function (filePath) {
     let myConfig = config.example;
 
 	try {
+        /**
+         * Use log() to log any messages to the log folder
+         */
+        await log(NAMESPACE, `Processing ${filePath}.`);
+
 		/**
 		 * Read file for data
 		 */
@@ -56,11 +61,8 @@ export default async function (filePath) {
             "Action completed. Server returns: OK."
         );
 
-        /**
-         * Use log() to log any messages to the log folder
-         */
         await log(NAMESPACE, `${filePath} processed successfuly.`);
-
+	} catch (error) {
         /**
          * Use markFailed() (opposite of markCompleted())when an error is raised or when the request cannot be completed.
          * 
@@ -69,7 +71,7 @@ export default async function (filePath) {
          *     - filePath, just leave it as filePath
          *     - text (string): additional message to append to the original file before moving it to the failed folder
         */
-	} catch (error) {
+        await markFailed(NAMESPACE, filePath, `Unable to process. Server returns: ${error.toString()}`);
 		await log(NAMESPACE, `Unable to process ${filePath}. Error: ${error}`);
 	}
 }

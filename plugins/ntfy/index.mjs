@@ -65,6 +65,7 @@ export default async function (filePath) {
 				await log(NAMESPACE, `Unable to process ${filePath}. Error: ${error.response}`);
 			});
 	} catch (error) {
+        await markFailed(NAMESPACE, filePath, `Unable to process. Server returns: ${error.toString()}`);
 		await log(NAMESPACE, `Unable to process ${filePath}. Error: ${error}`);
 	}
 }
